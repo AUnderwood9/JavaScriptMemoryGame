@@ -1,10 +1,6 @@
-body #box-container {
-  display: block;
-  width: auto;
-  height: auto; }
-  body #box-container .squares {
-    width: 10em;
-    height: 10em;
-    background-color: black; }
-
-/*# sourceMappingURL=style.css.map */
+body #box-container .squares {
+  width: 10em;
+  height: 10em;
+  background-color: black;
+  color: white;
+  margin: 0 2em; }

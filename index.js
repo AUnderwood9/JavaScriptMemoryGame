@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let currentDiv = document.querySelectorAll(".row")[i];
         for(let j = 0; j < 4; j++){
             let currentIndex = (j + (i * 4)) + 1;
-            createElementIdAndClass("div", currentIndex, ["hiddenSquare", "squares", "z-depth-3", "waves-effect", "col", "m3", "hoverable"], `${currentIndex}`, mainDiv);
+            createElementIdAndClass("span", currentIndex, ["squares", "z-depth-3", "waves-effect", "col", "m3"], `${currentIndex}`, mainDiv);
         }
     }
 
