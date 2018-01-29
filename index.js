@@ -1,8 +1,26 @@
 let colors = ["#2C14CC", "#767199", "#767199", "#FFAA40", "#CC6014", "#9ECC9C", "#BFFF00", "#CCC89C"];
 let colorList = [];
 
-let getRandomColor = (colorArray = colorList) => {
-    return colorArray[Math.floor(Math.random()*colorArray.length)].color;
+colors.forEach((item) => {
+    colorList.push({color: item, timesUsed: 0});
+});
+
+let getRandomColor = () => {
+    let randomIndex = Math.floor(Math.random()*colorList.length);
+    let randomColor = colorList[randomIndex].color;
+    let timesGiven = colorList[randomIndex].timesUsed;
+    //let randomColor = colorList[Math.floor(Math.random()*colorList.length)];
+    do{
+        if(colorList[randomIndex].timesUsed < 2){
+            console.log(`Fire for: ${colorList[randomIndex].color}, used ${colorList[randomIndex].timesUsed} times`);
+            colorList[randomIndex].timesUsed++;
+        }
+        else{
+            randomIndex = Math.floor(Math.random()*colorList.length);
+        }
+    }while(colorList[randomIndex].timesUsed < 2);
+
+    return colorList[randomIndex].color;
 };
 
 let addNewElement = (elementString, nodeToAppendTo = document.body) => {
@@ -13,20 +31,17 @@ let toggleElementClass = (elementToToggle, classToToggle) => {
     elementToToggle.toggleClass(classToToggle);
 }; 
 
-let addClickToggle = (itemElement) => {
+let handleClickToggle = (itemElement) => {
     itemElement.on("click", (event) => {
-        let toggleTarget = $(event.currentTarget.children[0]);
-        toggleElementClass(toggleTarget, "hide");
-
+    let toggleTarget = $(event.currentTarget.children[0]);
+    let randomColor = getRandomColor();
+    toggleElementClass(toggleTarget, "hide");
+    toggleTarget.css('background-color', `${randomColor}`); 
     });
 };
 
-colors.forEach((item) => {
-    colorList.push({color: item, timesUsed: 0});
-});
-
 $(document).ready( () => {
-    console.log("Fire");
+    //console.log("Fire");
     let mainDiv = $("#box-container");
     let rowIndex = 0;
 
@@ -59,13 +74,12 @@ $(document).ready( () => {
         //         let toggleTarget = $(event.currentTarget.children[0]);
         //         toggleTarget.toggleClass("hide");
         //     }
-                
-
 
         // });
+        let randomColor = getRandomColor();
 
-        addClickToggle(itemElement);    
-
+        handleClickToggle(itemElement);
+         
         
     });
 
