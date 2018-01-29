@@ -20,23 +20,25 @@ let createElementIdAndClass = function(elementType, elementId, elementClass, con
 let createElementAndClass = function(elementType, elementClass, contentToAppend = "", nodeToAppendTo = document.body) {
     let nodeToAdd = document.createElement(elementType);
     let nodeText = document.createTextNode(contentToAppend);
-    elementClass.forEach((item)=> {
-        nodeToAdd.className += `${item} `;
-    });
+    nodeToAdd.className = elementClass;
 
     
     nodeToAdd.appendChild(nodeText);
     nodeToAppendTo.appendChild(nodeToAdd);
 };
 
+let addNewElement = (elementString, nodeToAppendTo = document.body) => {
+    nodeToAppendTo.append(elementString);
+}
+
 
 colors.forEach((item) => {
     colorList.push({color: item, timesUsed: 0});
 });
 
-document.addEventListener("DOMContentLoaded", () => {
+$(document).ready( () => {
     console.log("Fire");
-    let mainDiv = document.getElementById("box-container");
+    let mainDiv = $("#box-container");
     let rowIndex = 0;
 
     console.log(mainDiv);
@@ -47,11 +49,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });*/
 
     for(let i = 0; i < 4; i++){
-        createElementAndClass("div", ["row", "center-align"], "", mainDiv);
-        let currentDiv = document.querySelectorAll(".row")[i];
+        let currentRow = `row-${i}`;
+        //createElementAndClass("div", ["row", "center-align"], "", mainDiv);
+        addNewElement(`<div id=${currentRow} class="row center-align"></div>`, mainDiv)
+        let currentDiv = $(`#${currentRow}`);
         for(let j = 0; j < 4; j++){
             let currentIndex = (j + (i * 4)) + 1;
-            createElementIdAndClass("span", currentIndex, ["squares", "z-depth-3", "waves-effect", "col", "m3"], `${currentIndex}`, mainDiv);
+            addNewElement(`<span id=box-${currentIndex} class="squares z-depth-3 waves-effect col m3">${currentIndex}</span>`, currentDiv);
+            //createElementIdAndClass("span", currentIndex, "squares z-depth-3 waves-effect col m3", `${currentIndex}`, mainDiv);
         }
     }
 
