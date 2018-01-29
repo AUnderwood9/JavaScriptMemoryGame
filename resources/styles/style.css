@@ -1,9 +1,16 @@
 body #box-container {
   margin: 5em auto; }
   body #box-container .squares {
-    width: 14em;
+    width: 17em;
     height: 10em;
     background-color: black;
-    color: white;
     margin: 0 2em;
-    line-height: 10em; }
+    padding: 0 0; }
+    body #box-container .squares .content {
+      line-height: 10em;
+      color: white;
+      background-color: blue;
+      overflow: auto;
+      display: block; }
+    body #box-container .squares .hide {
+      visibility: hidden; }

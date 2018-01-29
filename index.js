@@ -5,32 +5,21 @@ let getRandomColor = (colorArray = colorList) => {
     return colorArray[Math.floor(Math.random()*colorArray.length)].color;
 };
 
-let createElementIdAndClass = function(elementType, elementId, elementClass, contentToAppend = "", nodeToAppendTo = document.body) {
-    let nodeToAdd = document.createElement(elementType);
-    let nodeText = document.createTextNode(contentToAppend);
-    nodeToAdd.id = elementId;
-    elementClass.forEach((item)=> {
-        nodeToAdd.className += `${item} `;
-    });
-    
-    nodeToAdd.appendChild(nodeText);
-    nodeToAppendTo.appendChild(nodeToAdd);
-};
-
-let createElementAndClass = function(elementType, elementClass, contentToAppend = "", nodeToAppendTo = document.body) {
-    let nodeToAdd = document.createElement(elementType);
-    let nodeText = document.createTextNode(contentToAppend);
-    nodeToAdd.className = elementClass;
-
-    
-    nodeToAdd.appendChild(nodeText);
-    nodeToAppendTo.appendChild(nodeToAdd);
-};
-
 let addNewElement = (elementString, nodeToAppendTo = document.body) => {
     nodeToAppendTo.append(elementString);
 }
 
+let toggleElementClass = (elementToToggle, classToToggle) => {
+    elementToToggle.toggleClass(classToToggle);
+}; 
+
+let addClickToggle = (itemElement) => {
+    itemElement.on("click", (event) => {
+        let toggleTarget = $(event.currentTarget.children[0]);
+        toggleElementClass(toggleTarget, "hide");
+
+    });
+};
 
 colors.forEach((item) => {
     colorList.push({color: item, timesUsed: 0});
@@ -41,12 +30,7 @@ $(document).ready( () => {
     let mainDiv = $("#box-container");
     let rowIndex = 0;
 
-    console.log(mainDiv);
-
-    /*
-    mainDiv.addEventListener("click", () => {
-        mainDiv.style.color = getRandomColor();
-    });*/
+    //console.log(mainDiv);
 
     for(let i = 0; i < 4; i++){
         let currentRow = `row-${i}`;
@@ -55,19 +39,35 @@ $(document).ready( () => {
         let currentDiv = $(`#${currentRow}`);
         for(let j = 0; j < 4; j++){
             let currentIndex = (j + (i * 4)) + 1;
-            addNewElement(`<span id=box-${currentIndex} class="squares z-depth-3 waves-effect col m3">${currentIndex}</span>`, currentDiv);
+            addNewElement(`<span id=box-${currentIndex} class="squares z-depth-3 waves-effect col m3"><span class="content hide">${currentIndex}</span></span>`, currentDiv);
             //createElementIdAndClass("span", currentIndex, "squares z-depth-3 waves-effect col m3", `${currentIndex}`, mainDiv);
         }
     }
 
-    /*
-    for(let i = 1; i <= 16; i++){
-        
-        if((i - 1) === 0 || (i - 1) % 4 === 0)
-        {
+    let squareSpans = mainDiv.children().children();
 
-        }
+    console.log(squareSpans);
+    
+    squareSpans.each((index, item) => {
+        let itemElement = $(`#${item.id}`)
+        //console.log(item);
+        // itemElement.on("mouseover mouseout", (event) => {
+        //     if(event.type === "mouseover"){
+        //         let toggleTarget = $(event.currentTarget.children[0]);
+        //         toggleTarget.toggleClass("hide");
+        //     }else if(event.type === "mouseout"){
+        //         let toggleTarget = $(event.currentTarget.children[0]);
+        //         toggleTarget.toggleClass("hide");
+        //     }
+                
+
+
+        // });
+
+        addClickToggle(itemElement);    
+
         
-        createElementIdAndClass("div", i, ["hiddenSquare", "squares", "z-depth-3", "waves-effect", "col", "m3"], "", mainDiv);
-    }*/
+    });
+
+    //squareSpans.on("mouseenter")
 });
