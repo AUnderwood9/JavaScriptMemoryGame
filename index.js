@@ -5,20 +5,22 @@ colors.forEach((item) => {
     colorList.push({color: item, timesUsed: 0});
 });
 
-let getRandomColor = () => {
+let distributeRandomColor = () => {
     let randomIndex = Math.floor(Math.random()*colorList.length);
     let randomColor = colorList[randomIndex].color;
     let timesGiven = colorList[randomIndex].timesUsed;
     //let randomColor = colorList[Math.floor(Math.random()*colorList.length)];
-    do{
+    while(colorList[randomIndex].timesUsed < 2){
         if(colorList[randomIndex].timesUsed < 2){
-            console.log(`Fire for: ${colorList[randomIndex].color}, used ${colorList[randomIndex].timesUsed} times`);
+            //console.log(`Fire for: ${colorList[randomIndex].color}, used ${colorList[randomIndex].timesUsed} times`);
             colorList[randomIndex].timesUsed++;
         }
         else{
             randomIndex = Math.floor(Math.random()*colorList.length);
         }
-    }while(colorList[randomIndex].timesUsed < 2);
+    }
+
+    //console.log(colorList);
 
     return colorList[randomIndex].color;
 };
@@ -34,9 +36,9 @@ let toggleElementClass = (elementToToggle, classToToggle) => {
 let handleClickToggle = (itemElement) => {
     itemElement.on("click", (event) => {
     let toggleTarget = $(event.currentTarget.children[0]);
-    let randomColor = getRandomColor();
+    //let randomColor = distributeRandomColor();
     toggleElementClass(toggleTarget, "hide");
-    toggleTarget.css('background-color', `${randomColor}`); 
+    //toggleTarget.css('background-color', `${randomColor}`); 
     });
 };
 
@@ -54,7 +56,16 @@ $(document).ready( () => {
         let currentDiv = $(`#${currentRow}`);
         for(let j = 0; j < 4; j++){
             let currentIndex = (j + (i * 4)) + 1;
-            addNewElement(`<span id=box-${currentIndex} class="squares z-depth-3 waves-effect col m3"><span class="content hide">${currentIndex}</span></span>`, currentDiv);
+            let currentElement = $(`<span id=box-${currentIndex} class="squares z-depth-3 waves-effect col m3"></span>`);
+            let currentElementChild = $(`<span class="content hide">${currentIndex}</span>`);
+            let randomColor = distributeRandomColor();
+            currentElementChild.css('background-color', `${randomColor}`);
+
+            console.log(currentElement);
+            console.log(currentElementChild);
+            //currentElement.append(currentElementChild);
+            addNewElement(currentElementChild, currentElement);
+            addNewElement(currentElement, currentDiv);
             //createElementIdAndClass("span", currentIndex, "squares z-depth-3 waves-effect col m3", `${currentIndex}`, mainDiv);
         }
     }
@@ -76,7 +87,7 @@ $(document).ready( () => {
         //     }
 
         // });
-        let randomColor = getRandomColor();
+        let randomColor = distributeRandomColor();
 
         handleClickToggle(itemElement);
          
