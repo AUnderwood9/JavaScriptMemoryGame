@@ -1,4 +1,4 @@
-let colors = ["#2C14CC", "#767199", "#767199", "#FFAA40", "#CC6014", "#9ECC9C", "#BFFF00", "#CCC89C"];
+let colors = ["#2C14CC", "#767199", "#493D99", "#FFAA40", "#CC6014", "#9ECC9C", "#BFFF00", "#CCC89C"];
 let colorList = [];
 
 colors.forEach((item) => {
