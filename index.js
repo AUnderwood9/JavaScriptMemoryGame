@@ -5,6 +5,9 @@ let squaresSelected = 0;
 let selectedSquare1;
 let selectedSquare2;
 let numberOfMatches = 0;
+let numberOfSquares = 0;
+let numberOfClicks = 0;
+let timeTracker;
 
 colors.forEach((item) => {
     colorList.push({color: item, timesUsed: 0});
@@ -60,8 +63,6 @@ let distributeRandomColors = () => {
 
         // deploy the random color that was generated after its object representation has been updated
         randomColors.push(currentRandomColor);
-
-        // console.log(`Index: ${i}, Element: ${currentRandomColor}`)
     }
 }
 
@@ -115,38 +116,30 @@ let handleClickToggle = (itemElement) => {
         }
         squaresSelected++;
     }if(squaresSelected === 2){
-        
-        // setTimeout(function() {
-        //     alert("Selected two squares");
-        // }, 100);
-
-        
 
         let alertTimer = () => {
-            // squareColorMatch(selectedSquare1, selectedSquare2);
-            // alert("selected two squares");
-            console.log(squareColorMatch(selectedSquare1, selectedSquare2));
             if(squareColorMatch(selectedSquare1, selectedSquare2)){
                 alert("We have a match!");
-                // makeElementTransparent(selectedSquare1);
-                // makeElementTransparent(selectedSquare2);
                 concealMatchedSquares(selectedSquare1, selectedSquare2);
+                numberOfMatches++;
+                if(numberOfMatches === (numberOfSquares/2)){
+                    customTimeout(200, victoryMessage);
+                }
+
             }else{
                 alert("Sorry, this isn't a match :(");
-                // hideSelectedSquares(selectedSquare1, selectedSquare2);
-                customTimeout(500, resetElements);
+                customTimeout(200, resetElements);
             }
         }
 
         let resetElements = () => {
             squaresSelected = 0;
-
-            // console.log(selectedSquare1);
-            // console.log(selectedSquare2);
-            // toggleElementClass($(selectedSquare1.children[0]), "hide");
-            // toggleElementClass($(selectedSquare2.children[0]), "hide");
             hideSelectedSquares(selectedSquare1, selectedSquare2);
             
+        }
+
+        let victoryMessage = () => {
+            alert("Congratulations! you win! Aren't ya proud!? :D");
         }
 
         customTimeout(100, alertTimer);
@@ -165,14 +158,10 @@ let customTimeout = (timeToWait, codeBlock) => {
 }
 
 $(document).ready( () => {
-    //console.log("Fire");
     let mainDiv = $("#box-container");
     let rowIndex = 0;
 
     distributeRandomColors();
-
-
-    // //console.log(mainDiv);
 
     for(let i = 0; i < 4; i++){
         let currentRow = `row-${i}`;
@@ -185,7 +174,6 @@ $(document).ready( () => {
             let currentElementChild = $(`<span class="content hide">${currentIndex}</span>`);
             let randomColor = randomColors[currentIndex-1];
             currentElementChild.css('background-color', `${randomColor}`);
-            console.log(`Current Index: ${currentIndex}, Random Color: ${randomColor}`);
 
             addNewElement(currentElementChild, currentElement);
             addNewElement(currentElement, currentDiv);
@@ -193,9 +181,8 @@ $(document).ready( () => {
     }
 
     let squareSpans = mainDiv.children().children();
+    numberOfSquares = squareSpans.length;
 
-    // console.log(squareSpans);
-    
     squareSpans.each((index, item) => {
         let itemElement = $(`#${item.id}`)
 
