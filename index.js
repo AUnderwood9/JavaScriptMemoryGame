@@ -4,10 +4,23 @@ let randomColors = [];
 let squaresSelected = 0;
 let selectedSquare1;
 let selectedSquare2;
+let numberOfMatches = 0;
 
 colors.forEach((item) => {
     colorList.push({color: item, timesUsed: 0});
 });
+
+let removeEventHandler = (elementToModify, eventToRemove) => {
+    $(elementToModify).off(eventToRemove);
+}
+
+let makeElementTransparent = (elementToModify) => {
+    $(elementToModify).css({"opacity": 0});
+}
+
+let deleteElement = (elementToModify) => {
+    $(elementToModify).remove();
+}
 
 // Gets a random color from an array of objects that contain the property color (Used for the colorList array of objects)
 function getRandomElementFromClass(arrToRandomize){
@@ -60,6 +73,27 @@ let toggleElementClass = (elementToToggle, classToToggle) => {
     elementToToggle.toggleClass(classToToggle);
 }; 
 
+let hideSelectedSquares = (firstSquare, secondSquare) => {
+    toggleElementClass($(firstSquare.children[0]), "hide");
+    toggleElementClass($(secondSquare.children[0]), "hide");
+}
+
+// Remove event handlers from squares that match and set it's opacity to transparent
+let concealMatchedSquares = (square1, square2) => {
+    removeEventHandler(square1, "click");
+    removeEventHandler(square2, "click");
+    makeElementTransparent(square1);
+    makeElementTransparent(square2);
+}
+
+// Compare the two squares that were selected
+let squareColorMatch = (square1, square2) => {
+    // return if the square colors match
+    let match = $(square1.children[0]).css("backgroundColor") === $(square2.children[0]).css("backgroundColor");
+
+    return match;
+}
+
 let handleClickToggle = (itemElement) => {
     itemElement.on("click", (event) => {
     let toggleTarget = $(event.currentTarget.children[0]);
@@ -72,11 +106,11 @@ let handleClickToggle = (itemElement) => {
     {
         switch(squaresSelected){
             case 0:
-                selectedSquare1 = event.target.children[0];
+                selectedSquare1 = event.target;
                 break;
                 
             case 1:
-                selectedSquare2 = event.target.children[0];
+                selectedSquare2 = event.target;
                 break;
         }
         squaresSelected++;
@@ -86,22 +120,37 @@ let handleClickToggle = (itemElement) => {
         //     alert("Selected two squares");
         // }, 100);
 
+        
+
         let alertTimer = () => {
-            alert("selected two squares");
+            // squareColorMatch(selectedSquare1, selectedSquare2);
+            // alert("selected two squares");
+            console.log(squareColorMatch(selectedSquare1, selectedSquare2));
+            if(squareColorMatch(selectedSquare1, selectedSquare2)){
+                alert("We have a match!");
+                // makeElementTransparent(selectedSquare1);
+                // makeElementTransparent(selectedSquare2);
+                concealMatchedSquares(selectedSquare1, selectedSquare2);
+            }else{
+                alert("Sorry, this isn't a match :(");
+                // hideSelectedSquares(selectedSquare1, selectedSquare2);
+                customTimeout(500, resetElements);
+            }
         }
 
         let resetElements = () => {
             squaresSelected = 0;
 
-            console.log(selectedSquare1);
-            console.log(selectedSquare2);
-            toggleElementClass($(selectedSquare1), "hide");
-            toggleElementClass($(selectedSquare2), "hide");
+            // console.log(selectedSquare1);
+            // console.log(selectedSquare2);
+            // toggleElementClass($(selectedSquare1.children[0]), "hide");
+            // toggleElementClass($(selectedSquare2.children[0]), "hide");
+            hideSelectedSquares(selectedSquare1, selectedSquare2);
             
         }
 
         customTimeout(100, alertTimer);
-        customTimeout(200, resetElements);
+        // customTimeout(1000, resetElements);
 
         //setTimeout
         squaresSelected = 0;
@@ -113,11 +162,6 @@ let handleClickToggle = (itemElement) => {
 
 let customTimeout = (timeToWait, codeBlock) => {
     setTimeout(codeBlock, timeToWait);
-}
-
-// Compare the two squares that were selected
-let squareColorMatch = () => {
-    // return if the square colors match
 }
 
 $(document).ready( () => {
@@ -143,12 +187,8 @@ $(document).ready( () => {
             currentElementChild.css('background-color', `${randomColor}`);
             console.log(`Current Index: ${currentIndex}, Random Color: ${randomColor}`);
 
-            // console.log(currentElement);
-            // console.log(currentElementChild);
-            //currentElement.append(currentElementChild);
             addNewElement(currentElementChild, currentElement);
             addNewElement(currentElement, currentDiv);
-            //createElementIdAndClass("span", currentIndex, "squares z-depth-3 waves-effect col m3", `${currentIndex}`, mainDiv);
         }
     }
 
@@ -158,23 +198,9 @@ $(document).ready( () => {
     
     squareSpans.each((index, item) => {
         let itemElement = $(`#${item.id}`)
-        //console.log(item);
-        // itemElement.on("mouseover mouseout", (event) => {
-        //     if(event.type === "mouseover"){
-        //         let toggleTarget = $(event.currentTarget.children[0]);
-        //         toggleTarget.toggleClass("hide");
-        //     }else if(event.type === "mouseout"){
-        //         let toggleTarget = $(event.currentTarget.children[0]);
-        //         toggleTarget.toggleClass("hide");
-        //     }
-
-        // });
-        // let randomColor = distributeRandomColor();
 
         handleClickToggle(itemElement);
          
         
     });
-
-    //squareSpans.on("mouseenter")
 });
