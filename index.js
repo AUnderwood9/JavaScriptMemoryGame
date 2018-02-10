@@ -1,6 +1,9 @@
 let colors = ["#993D3D", "#767199", "#493D99", "#FFAA40", "#CC6014", "#9ECC9C", "#BFFF00", "#CCC89C"];
 let colorList = [];
 let randomColors = [];
+let squaresSelected = 0;
+let selectedSquare1;
+let selectedSquare2;
 
 colors.forEach((item) => {
     colorList.push({color: item, timesUsed: 0});
@@ -26,26 +29,6 @@ function getRandomColorObject(colorToSearch){
 function removeIfUsedTwice(item){
     return item.timesUsed < 2;
 }
-
-// let distributeRandomColor = () => {
-//     let randomIndex = Math.floor(Math.random()*colorList.length);
-//     let randomColor = colorList[randomIndex].color;
-//     let timesGiven = colorList[randomIndex].timesUsed;
-//     //let randomColor = colorList[Math.floor(Math.random()*colorList.length)];
-//     while(colorList[randomIndex].timesUsed < 2){
-//         if(colorList[randomIndex].timesUsed < 2){
-//             //console.log(`Fire for: ${colorList[randomIndex].color}, used ${colorList[randomIndex].timesUsed} times`);
-//             colorList[randomIndex].timesUsed++;
-//         }
-//         else{
-//             randomIndex = Math.floor(Math.random()*colorList.length);
-//         }
-//     }
-
-//     //console.log(colorList);
-
-//     return colorList[randomIndex].color;
-// };
 
 // This function distributes random color objects if they have been used less than two times
 let distributeRandomColors = () => {
@@ -82,9 +65,60 @@ let handleClickToggle = (itemElement) => {
     let toggleTarget = $(event.currentTarget.children[0]);
     //let randomColor = distributeRandomColor();
     toggleElementClass(toggleTarget, "hide");
-    //toggleTarget.css('background-color', `${randomColor}`); 
+    //toggleTarget.css('background-color', `${randomColor}`);
+
+    // Check if this is the first square that was selected or the second
+    if(squaresSelected <= 2)
+    {
+        switch(squaresSelected){
+            case 0:
+                selectedSquare1 = event.target.children[0];
+                break;
+                
+            case 1:
+                selectedSquare2 = event.target.children[0];
+                break;
+        }
+        squaresSelected++;
+    }if(squaresSelected === 2){
+        
+        // setTimeout(function() {
+        //     alert("Selected two squares");
+        // }, 100);
+
+        let alertTimer = () => {
+            alert("selected two squares");
+        }
+
+        let resetElements = () => {
+            squaresSelected = 0;
+
+            console.log(selectedSquare1);
+            console.log(selectedSquare2);
+            toggleElementClass($(selectedSquare1), "hide");
+            toggleElementClass($(selectedSquare2), "hide");
+            
+        }
+
+        customTimeout(100, alertTimer);
+        customTimeout(200, resetElements);
+
+        //setTimeout
+        squaresSelected = 0;
+        
+    }
+    
     });
 };
+
+let customTimeout = (timeToWait, codeBlock) => {
+    setTimeout(codeBlock, timeToWait);
+}
+
+// Compare the two squares that were selected
+let squareColorMatch = () => {
+    // return if the square colors match
+}
 
 $(document).ready( () => {
     //console.log("Fire");
